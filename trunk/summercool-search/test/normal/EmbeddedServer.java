@@ -1,4 +1,4 @@
-package org.summercool.search.test;
+package normal;
 
 import java.io.IOException;
 import java.text.ParseException;
@@ -14,7 +14,7 @@ import org.apache.solr.common.util.DateUtil;
 import org.summercool.search.server.SolrServer;
 import org.xml.sax.SAXException;
 
-public class EmbeddedSolrServerTest {
+public class EmbeddedServer {
 
 	public static void main(String[] args) throws ParserConfigurationException, IOException, SAXException,
 			SolrServerException, ParseException {

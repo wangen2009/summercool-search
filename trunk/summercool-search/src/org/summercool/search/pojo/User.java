@@ -1,4 +1,4 @@
-package org.summercool.search.platform.pojo;
+package org.summercool.search.pojo;
 
 import java.util.Date;
 

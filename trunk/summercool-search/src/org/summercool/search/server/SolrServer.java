@@ -1,4 +1,4 @@
-package org.summercool.search.platform.server;
+package org.summercool.search.server;
 
 import java.io.File;
 import java.io.IOException;
@@ -13,7 +13,7 @@ import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.embedded.EmbeddedSolrServer;
 import org.apache.solr.common.SolrInputDocument;
 import org.apache.solr.core.CoreContainer;
-import org.summercool.search.platform.pojo.User;
+import org.summercool.search.pojo.User;
 import org.xml.sax.SAXException;
 
 public class SolrServer {
@@ -35,7 +35,7 @@ public class SolrServer {
 		server = new EmbeddedSolrServer(container, "user");
 
 //		int temp = 1;
-//		for (int j = 1; j <= 1000; j++) {
+//		for (int j = 1; j <= 100; j++) {
 //			List<SolrInputDocument> docs = new ArrayList<SolrInputDocument>();
 //			for (int i = 1; i <= 1000; i++) {
 //				//

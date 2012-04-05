@@ -3,6 +3,7 @@
     <wb-module deploy-name="summercool-search">
         <wb-resource deploy-path="/" source-path="/webapp" tag="defaultRootSource"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/test"/>
         <property name="context-root" value="summercool-search"/>
         <property name="java-output-path" value="/summercool-search/build/classes"/>
     </wb-module>

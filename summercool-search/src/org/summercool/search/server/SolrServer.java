@@ -34,7 +34,7 @@ public class SolrServer {
 		this.coreNames = coreNames;
 	}
 
-	public EmbeddedSolrServer getSolrServerByCoreName() {
+	public EmbeddedSolrServer getSolrServer() {
 		if (embeddedSolrServers == null || embeddedSolrServers.size() == 0) {
 			return null;
 		}

@@ -2,73 +2,99 @@ package org.summercool.search.server;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.embedded.EmbeddedSolrServer;
-import org.apache.solr.common.SolrInputDocument;
 import org.apache.solr.core.CoreContainer;
-import org.summercool.search.pojo.User;
 import org.xml.sax.SAXException;
 
 public class SolrServer {
 
-	private static String SOLR_HOME = "D:/solr/home";
+	public static final String BLANK_SOLRNAME = "";
+
+	private String solrHome;
+
+	private String solrFile;
+
+	private String[] coreNames;
 
 	private CoreContainer container;
 
-	private EmbeddedSolrServer server;
+	private String firstCoreName;
 
-	public void start() throws ParserConfigurationException, IOException, SAXException, SolrServerException {
-		File home = new File(SOLR_HOME);
-		File f = new File(home, "solr.xml");
+	private Map<String, EmbeddedSolrServer> embeddedSolrServers = new LinkedHashMap<String, EmbeddedSolrServer>();
 
-		container = new CoreContainer();
-		container.setPersistent(true);
-		container.load(SOLR_HOME, f);
+	public SolrServer() {
+	}
 
-		server = new EmbeddedSolrServer(container, "user");
+	public SolrServer(String[] coreNames) {
+		this.coreNames = coreNames;
+	}
 
-//		int temp = 1;
-//		for (int j = 1; j <= 100; j++) {
-//			List<SolrInputDocument> docs = new ArrayList<SolrInputDocument>();
-//			for (int i = 1; i <= 1000; i++) {
-//				//
-//				User user = new User();
-//				user.setId(temp);
-//				user.setCreateTime(new Date());
-//				user.setStatus((i % 2) != 0 ? true : false);
-//				user.setName(UUID.randomUUID().toString());
-//				user.setAge((int) Math.random() * 100);
-//				//
-//				SolrInputDocument doc = new SolrInputDocument();
-//				doc.setField("id", user.getId());
-//				doc.setField("createTime", user.getCreateTime());
-//				doc.setField("status", user.isStatus());
-//				doc.setField("name", user.getName());
-//				doc.setField("age", user.getAge());
-//				//
-//				docs.add(doc);
-//				
-//				//
-//				temp = temp +1;
-//			}
-//			server.add(docs);
-//			server.commit();
-//		}
+	public EmbeddedSolrServer getSolrServerByCoreName() {
+		if (embeddedSolrServers == null || embeddedSolrServers.size() == 0) {
+			return null;
+		}
+		return embeddedSolrServers.get(firstCoreName);
+	}
 
+	public EmbeddedSolrServer getSolrServerByCoreName(String coreName) {
+		return embeddedSolrServers.get(coreName);
+	}
+
+	public Map<String, EmbeddedSolrServer> getSolrServerByCoreNames(String[] coreNames) {
+		Map<String, EmbeddedSolrServer> embeddedSolrServers = new LinkedHashMap<String, EmbeddedSolrServer>();
+		if (coreNames == null || coreNames.length == 0) {
+			return embeddedSolrServers;
+		}
+		for (String coreName : coreNames) {
+			embeddedSolrServers.put(coreName, this.embeddedSolrServers.get(coreName));
+		}
+		return embeddedSolrServers;
+	}
+
+	public void start() {
+		//
+		if (solrHome == null || solrHome.equals("")) {
+			throw new RuntimeException("SOLR_HOME can not be empty !");
+		}
+		File home = new File(solrHome);
+		//
+		if (solrFile == null || solrFile.equals("")) {
+			throw new RuntimeException("SOLR_FILE can not be empty !");
+		}
+		File file = new File(home, solrFile);
+		//
+		try {
+			container = new CoreContainer();
+			container.load(solrHome, file);
+		} catch (ParserConfigurationException e) {
+			throw new RuntimeException(e);
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		} catch (SAXException e) {
+			throw new RuntimeException(e);
+		}
+		//
+		if (coreNames == null || coreNames.length == 0) {
+			EmbeddedSolrServer server = new EmbeddedSolrServer(container, BLANK_SOLRNAME);
+			embeddedSolrServers.put(BLANK_SOLRNAME, server);
+			firstCoreName = BLANK_SOLRNAME;
+			return;
+		}
+		for (String coreName : coreNames) {
+			EmbeddedSolrServer server = new EmbeddedSolrServer(container, coreName);
+			embeddedSolrServers.put(coreName, server);
+			if (embeddedSolrServers.size() == 1) {
+				firstCoreName = coreName;
+			}
+		}
 	}
 
 	public void stop() {
 		container.shutdown();
-	}
-
-	public EmbeddedSolrServer getServer() {
-		return server;
 	}
 }

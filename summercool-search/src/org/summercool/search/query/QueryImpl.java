@@ -1,15 +1,15 @@
 package org.summercool.search.query;
 
 import org.apache.solr.client.solrj.SolrQuery;
+import org.apache.solr.client.solrj.SolrServer;
 import org.apache.solr.client.solrj.SolrServerException;
-import org.apache.solr.client.solrj.embedded.EmbeddedSolrServer;
 import org.apache.solr.client.solrj.response.QueryResponse;
 
 public class QueryImpl implements Query {
 
-	private EmbeddedSolrServer server;
+	private SolrServer server;
 
-	public QueryImpl(EmbeddedSolrServer server) {
+	public QueryImpl(SolrServer server) {
 		this.server = server;
 	}
 
